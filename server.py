@@ -15,11 +15,25 @@ def agent_portrayal(agent):
     return portrayal
 
 
-num_row_width = 5
-num_row_height = 7
+def calculate_canvas_dimensions(num_columns, num_rows, max_height):
+    # Calcula la altura de cada cuadro
+    box_height = max_height / num_rows
+    # Como los cuadros son simétricos, el ancho es igual al alto
+    box_width = box_height
+    # Calcula el ancho total del canvas
+    width = box_width * num_columns
 
-grid = CanvasGrid(agent_portrayal, num_row_width, num_row_height, 650, 650)
+    return max_height, width
+
+
+rows = 7
+columns = 5
+canvas_height, canvas_width = calculate_canvas_dimensions(columns, rows, 600)
+print(canvas_width/columns)
+print(canvas_height/rows)
+
+grid = CanvasGrid(agent_portrayal, columns, rows, canvas_width, canvas_height)
 server = ModularServer(SokobanModel, [grid], "Sokoban Model",
-                       {"N": 1, "width": num_row_width, "height": num_row_height})
+                       {"N": 1, "width": columns, "height": rows})
 server.port = 8522
 server.launch()
