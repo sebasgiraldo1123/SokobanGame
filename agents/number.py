@@ -8,6 +8,6 @@ class Number(Agent):
 
         # Visualización
         self.path = "assets/images/bot.png"
-        self.layer = 0
+        self.layer = 2
         self.w = 1
         self.h = 1
