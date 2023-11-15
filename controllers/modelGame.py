@@ -9,7 +9,7 @@ from agents.box import Box
 import mesa
 
 
-class SokobanModel(Model):
+class ModelGame(Model):
     def __init__(self, data, route="", heuristic=""):
         self.data = data
         self.grid = MultiGrid(len(self.data[0]), len(self.data), True)

@@ -1,41 +1,35 @@
 from mesa import Agent
+from behaviors.breadthFirstSearch import BFS
 
 
 class Bot(Agent):
-    def __init__(self, unique_id, model):
+    def __init__(self, unique_id, model, route_type, heuristic):
         super().__init__(unique_id, model)
-
-        # Borrar
-        self.wealth = 1
-
-        # Visualización
-        self.path = "assets/images/bot.png"
-        self.layer = 0
+        self.route_type = route_type
+        self.heuristic = heuristic
 
     def step(self) -> None:
-        self.move()
-        # si no encuentra la bandera se sigue moviendo
-        if self.wealth > 0:
-            self.give_money()
+        self.perform_route()
 
-    def give_money(self):
-        cellmates = self.model.grid.get_cell_list_contents([self.pos])
-        if len(cellmates) > 1:
-            other = self.random.choice(cellmates)
-            other.wealth += 1
-            self.wealth -= 1
+    def perform_route(self):
+        if self.route_type == "BFS":
+            self.perform_bfs()
+        elif self.route_type == "DFS":
+            self.perform_dfs()
+        elif self.route_type == "UCS":
+            self.perform_ucs()
+        elif self.route_type == "Beam Search":
+            self.perform_beam_search()
+        elif self.route_type == "Hill climbing":
+            self.perform_hill_climbing()
+        elif self.route_type == "A*":
+            self.perform_a_star()
 
-    def move(self) -> None:
+    def perform_bfs(self):
+        BFS(self).search()
 
-        # Orden = abajo, izquierda, arriba, derecha, ojo que cuando está en los bordes escoge el reflejo,
-        # Tiene la posibilidad de devolver no solo la posición sino también el tipo de agente que está ahí.
-        # Crea un método que detecte esto y elimine de las tuplas este error.
-        possible_steps = self.model.grid.get_neighborhood(
-            self.pos, moore=False, include_center=False
-        )
-        print("actual "+str(self.pos)+" posibles pasos "+str(possible_steps))
-        # aquí se escoge de forma aleatoria cual paso va a tomar
-        new_position = self.random.choice(possible_steps)
-
-        # La estrategía se debe llamar aquí para tomar la decisión de adonde moverse
-        self.model.grid.move_agent(self, new_position)
+    def veryfyWay(self, cellmates) -> bool:
+        for agent in cellmates:
+            if isinstance(agent, Way):
+                return True
+        return False
