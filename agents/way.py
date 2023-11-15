@@ -8,3 +8,5 @@ class Way(Agent):
         # Visualización
         self.path = "assets/images/way.png"
         self.layer = 0
+        self.w = 1
+        self.h = 1

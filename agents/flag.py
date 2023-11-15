@@ -7,4 +7,6 @@ class Flag(Agent):
 
         # Visualización
         self.path = "assets/images/flag.png"
-        self.layer = 0
+        self.layer = 1
+        self.w = 1
+        self.h = 1

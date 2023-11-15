@@ -4,7 +4,7 @@ class ReadData:
 
     def read_data(self):
         try:
-            with open(self.file_name, 'r') as file:
+            with open("assets/data/"+self.file_name, 'r') as file:
                 dataTemp = [line.strip().split(', ') for line in file]
                 data = [[element.rstrip(',') for element in row]
                         for row in dataTemp]

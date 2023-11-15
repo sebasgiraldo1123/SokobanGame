@@ -8,3 +8,5 @@ class Box(Agent):
         # Visualización
         self.path = "assets/images/box.png"
         self.layer = 1
+        self.w = 0.8
+        self.h = 0.8

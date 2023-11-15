@@ -8,3 +8,5 @@ class Rock(Agent):
         # Visualización
         self.path = "assets/images/rock.png"
         self.layer = 0
+        self.w = 1
+        self.h = 1

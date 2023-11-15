@@ -8,6 +8,8 @@ class Bot(Agent):
         # Visualización
         self.path = "assets/images/bot.png"
         self.layer = 1
+        self.w = 0.8
+        self.h = 0.8
         self.route_type = route_type
         self.heuristic = heuristic
 
