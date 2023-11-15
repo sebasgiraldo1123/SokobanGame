@@ -1,12 +1,15 @@
 import mesa
+from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.modules import CanvasGrid
-from mesa_viz_tornado.ModularVisualization import ModularServer
 
 from controllers import canvasTools
 from controllers.modelGame import ModelGame
 from controllers.readGame import ReadData
 
 data = ReadData("file.txt").read_data()
+routes = ["Select Routes", "BFS", "DFS", "UCS",
+          "Beam Search", "Hill climbing", "A*"]
+heuristics = ["Select Heuristic", "Manhattan", "Euclidean"]
 
 simulation_params = {
     "data": data,
@@ -35,7 +38,8 @@ def agent_portrayal(agent):
 rows = len(data)
 columns = len(data[0])
 
-canvas_height, canvas_width = canvasTools.calculate_canvas_dimensions(columns, rows, 600)
+canvas_height, canvas_width = canvasTools.calculate_canvas_dimensions(
+    columns, rows, 600)
 
 grid = CanvasGrid(agent_portrayal, columns, rows, canvas_width, canvas_height)
 server = ModularServer(ModelGame, [grid], "Sokoban Game",
