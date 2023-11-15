@@ -49,8 +49,7 @@ class ModelGame(Model):
                             self.grid.place_agent(newWay, (j, i))
                             self.schedule.add(newWay)
                         elif item[k] == "a":
-                            newRobot = Bot(
-                                self.current_id+100, self, self.route, self.heuristic)
+                            newRobot = Bot(self.current_id+100, self, self.route, self.heuristic)
                             self.grid.place_agent(newRobot, (j, i))
                             self.schedule.add(newRobot)
                         elif item[k] == "b":
