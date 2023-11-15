@@ -1,4 +1,6 @@
 from mesa import Agent
+
+from agents.way import Way
 from behaviors.breadthFirstSearch import BFS
 
 

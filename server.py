@@ -6,21 +6,20 @@ from controllers import canvasTools
 from controllers.modelGame import ModelGame
 from controllers.readGame import ReadData
 
-
 data = ReadData("file.txt").read_data()
 
 simulation_params = {
     "data": data,
     "route": mesa.visualization.Choice(
         name="Informed and uninformed search algorithm",
-        value="",
-        choices=["Selected Route", "BFS", "DFS", "UCS", "Beam Search", "Hill climbing", "A*"]
+        value="BFS",
+        choices=["BFS", "DFS", "UCS", "Beam Search", "Hill climbing", "A*"]
     ),
-    "heuristic": mesa.visualization.Choice(name="Heuristic",
-                                           value="",
-                                           choices=["Selected Heuristic", "Manhattan", "Euclidean"]),
+    "heuristic": mesa.visualization.Choice(
+        name="Heuristic",
+        value="Manhattan",
+        choices=["Manhattan", "Euclidean"]),
 }
-
 
 # Cada agente que se dibuja en el mundo grilla pasa por aquí y toma las características aquí definidas.
 
@@ -37,9 +36,6 @@ rows = len(data)
 columns = len(data[0])
 
 canvas_height, canvas_width = canvasTools.calculate_canvas_dimensions(columns, rows, 600)
-
-print(canvas_width / columns)
-print(canvas_height / rows)
 
 grid = CanvasGrid(agent_portrayal, columns, rows, canvas_width, canvas_height)
 server = ModularServer(ModelGame, [grid], "Sokoban Game",

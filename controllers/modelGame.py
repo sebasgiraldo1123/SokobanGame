@@ -59,7 +59,6 @@ class ModelGame(Model):
 
     # Ejecuta todos los métodos step de cada agente
     # Aquí se toma una foto del mundo en cada paso
-
     def step(self) -> None:
         self.schedule.step()
 
