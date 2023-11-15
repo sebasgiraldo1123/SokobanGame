@@ -1,12 +1,12 @@
 from mesa import Model
 from mesa.space import MultiGrid
 from mesa.time import RandomActivation
-from agents.rock import Rock
-from agents.way import Way
-from agents.flag import Flag
+
 from agents.bot import Bot
 from agents.box import Box
-import mesa
+from agents.flag import Flag
+from agents.rock import Rock
+from agents.way import Way
 
 
 class ModelGame(Model):
@@ -49,8 +49,7 @@ class ModelGame(Model):
                             self.grid.place_agent(newWay, (j, i))
                             self.schedule.add(newWay)
                         elif item[k] == "a":
-                            newRobot = Bot(
-                                self.current_id+100, self, self.route, self.heuristic)
+                            newRobot = Bot(self.current_id+100, self, self.route, self.heuristic)
                             self.grid.place_agent(newRobot, (j, i))
                             self.schedule.add(newRobot)
                         elif item[k] == "b":

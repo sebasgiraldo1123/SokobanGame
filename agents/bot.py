@@ -5,6 +5,9 @@ from behaviors.breadthFirstSearch import BFS
 class Bot(Agent):
     def __init__(self, unique_id, model, route_type, heuristic):
         super().__init__(unique_id, model)
+        # Visualización
+        self.path = "assets/images/bot.png"
+        self.layer = 1
         self.route_type = route_type
         self.heuristic = heuristic
 
@@ -33,3 +36,7 @@ class Bot(Agent):
             if isinstance(agent, Way):
                 return True
         return False
+     
+    def move(self) -> None:
+        print(self.path)
+
