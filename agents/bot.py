@@ -1,44 +1,52 @@
 from mesa import Agent
 from behaviors.breadthFirstSearch import BFS
+from agents.way import Way
+from agents.flag import Flag
 
 
 class Bot(Agent):
-    def __init__(self, unique_id, model, route_type, heuristic):
+    def __init__(self, unique_id, model, route, heuristic):
         super().__init__(unique_id, model)
         # Visualización
         self.path = "assets/images/bot.png"
         self.layer = 1
         self.w = 0.8
         self.h = 0.8
-        self.route_type = route_type
+        self.route = route
         self.heuristic = heuristic
+        self.directions = [(-1, 0), (0, 1), (1, 0), (0, -1)]
 
     def step(self) -> None:
         self.perform_route()
 
     def perform_route(self):
-        if self.route_type == "BFS":
+        if self.route == "BFS":
             self.perform_bfs()
-        elif self.route_type == "DFS":
+        elif self.route == "DFS":
             self.perform_dfs()
-        elif self.route_type == "UCS":
+        elif self.route == "UCS":
             self.perform_ucs()
-        elif self.route_type == "Beam Search":
+        elif self.route == "Beam Search":
             self.perform_beam_search()
-        elif self.route_type == "Hill climbing":
+        elif self.route == "Hill climbing":
             self.perform_hill_climbing()
-        elif self.route_type == "A*":
+        elif self.route == "A*":
             self.perform_a_star()
 
     def perform_bfs(self):
         BFS(self).search()
 
-    def veryfyWay(self, cellmates) -> bool:
+    def verifyWay(self, cellmates) -> bool:
         for agent in cellmates:
             if isinstance(agent, Way):
                 return True
         return False
-     
+
+    def verifyflag(self, cellmates) -> bool:
+        for agent in cellmates:
+            if isinstance(agent, Flag):
+                return True
+        return False
+
     def move(self) -> None:
         print(self.path)
-

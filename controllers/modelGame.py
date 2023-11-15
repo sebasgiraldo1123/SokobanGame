@@ -10,7 +10,7 @@ from agents.way import Way
 
 
 class ModelGame(Model):
-    def __init__(self, data, route="", heuristic=""):
+    def __init__(self, data, route, heuristic):
         self.data = data
         self.grid = MultiGrid(len(self.data[0]), len(self.data), True)
 
@@ -21,11 +21,7 @@ class ModelGame(Model):
         self.current_id = 0
         self.route = route
         self.heuristic = heuristic
-        self.create_agents()
 
-    # Pongo los agentes en el mundo grilla
-    # Aquí se carga el mapa
-    def create_agents(self):
         for i in range(len(self.data)):
             for j in range(len(self.data[0])):
                 self.current_id += 1
@@ -49,7 +45,8 @@ class ModelGame(Model):
                             self.grid.place_agent(newWay, (j, i))
                             self.schedule.add(newWay)
                         elif item[k] == "a":
-                            newRobot = Bot(self.current_id+100, self, self.route, self.heuristic)
+                            newRobot = Bot(self.current_id+100,
+                                           self, self.route, self.heuristic)
                             self.grid.place_agent(newRobot, (j, i))
                             self.schedule.add(newRobot)
                         elif item[k] == "b":
