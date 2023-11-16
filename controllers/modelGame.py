@@ -22,6 +22,10 @@ class ModelGame(Model):
         self.route = route
         self.heuristic = heuristic
 
+        # Crea los agentes
+        self.create_agents()
+
+    def create_agents(self) -> None:
         for i in range(len(self.data)):
             for j in range(len(self.data[0])):
                 self.current_id += 1

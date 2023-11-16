@@ -1,5 +1,6 @@
 import mesa
 from mesa.visualization.ModularVisualization import ModularServer
+from mesa.visualization import Choice
 from mesa.visualization.modules import CanvasGrid
 
 from controllers import canvasTools
@@ -14,12 +15,12 @@ heuristics = ["Select Heuristic", "Manhattan", "Euclidean"]
 
 simulation_params = {
     "data": data,
-    "route": mesa.visualization.Choice(name="Route",
-                                       value="BFS",
-                                       choices=routes),
-    "heuristic": mesa.visualization.Choice(name="Heuristic",
-                                           value=" ",
-                                           choices=heuristics),
+    "route": Choice(name="Route",
+                    value="UCS",
+                    choices=routes),
+    "heuristic": Choice(name="Heuristic",
+                        value="",
+                        choices=heuristics),
 }
 
 
