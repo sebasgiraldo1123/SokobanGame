@@ -1,7 +1,9 @@
 from mesa import Agent
 from behaviors.breadthFirstSearch import BFS
+from behaviors.uniformCostSearch import UCS
 from agents.way import Way
 from agents.flag import Flag
+from agents.number import Number
 
 
 class Bot(Agent):
@@ -15,10 +17,14 @@ class Bot(Agent):
         self.route = route
         self.heuristic = heuristic
         self.directions = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+        self.valueStep = 1
+
+    # Se ejecuta en cada paso de la simulación
 
     def step(self) -> None:
         self.perform_route()
 
+    # Ejecuta el algoritmo de búsqueda que se seleccionó
     def perform_route(self):
         if self.route == "BFS":
             self.perform_bfs()
@@ -34,7 +40,16 @@ class Bot(Agent):
             self.perform_a_star()
 
     def perform_bfs(self):
-        BFS(self).search()
+        steps = BFS(self).search()
+        numStep = self.model.schedule.steps + 1
+        if numStep < len(steps):
+            self.create_number_agent(numStep, steps[numStep])
+
+    def perform_ucs(self):
+        steps = UCS(self).search()
+        numStep = self.model.schedule.steps + 1
+        if numStep < len(steps):
+            self.create_number_agent(numStep, steps[numStep])
 
     def verifyWay(self, cellmates) -> bool:
         for agent in cellmates:
@@ -48,5 +63,9 @@ class Bot(Agent):
                 return True
         return False
 
-    def move(self) -> None:
-        print(self.path)
+    # Crea un agente número en la posición dada con step del recorrido
+    def create_number_agent(self, depth, pos) -> None:
+        number_agent = Number(
+            self.model.next_id(), self, depth)
+        self.model.grid.place_agent(number_agent, pos)
+        self.model.schedule.add(number_agent)
