@@ -10,3 +10,4 @@ class Flag(Agent):
         self.layer = 1
         self.w = 1
         self.h = 1
+        self.pos
