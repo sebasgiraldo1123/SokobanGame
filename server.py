@@ -9,16 +9,16 @@ from controllers.readGame import ReadData
 
 
 data = ReadData("file.txt").read_data()
-routes = ["Select Routes", "BFS", "DFS", "UCS",
+routes = [" ", "BFS", "DFS", "UCS",
           "Beam Search", "Hill climbing", "A*"]
-heuristics = ["Select Heuristic", "Manhattan", "Euclidean"]
+heuristics = [" ", "Manhattan", "Euclidean"]
 
 simulation_params = {
     "data": data,
-    "route": Choice(name="Route",
-                    value="UCS",
+    "route": Choice(name="Selected Route",
+                    value="",
                     choices=routes),
-    "heuristic": Choice(name="Heuristic",
+    "heuristic": Choice(name="Selected Heuristic",
                         value="",
                         choices=heuristics),
 }
