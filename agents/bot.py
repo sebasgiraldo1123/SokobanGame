@@ -1,9 +1,8 @@
 from mesa import Agent
 
+from agents.flag import Flag
 from agents.way import Way
 from behaviors.breadthFirstSearch import BFS
-from agents.way import Way
-from agents.flag import Flag
 
 
 class Bot(Agent):

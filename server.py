@@ -2,6 +2,7 @@ import mesa
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.modules import CanvasGrid
 
+from agents.number import Number
 from controllers import canvasTools
 from controllers.modelGame import ModelGame
 from controllers.readGame import ReadData
@@ -24,14 +25,28 @@ simulation_params = {
         choices=["Manhattan", "Euclidean"]),
 }
 
+
 # Cada agente que se dibuja en el mundo grilla pasa por aquí y toma las características aquí definidas.
 
 def agent_portrayal(agent):
-    portrayal = {"Shape": agent.path,
-                 "Layer": agent.layer,
-                 "w": agent.w,
-                 "h": agent.h,
-                 }
+    portrayal = {
+        "Layer": agent.layer,
+        "w": agent.w,
+        "h": agent.h,
+    }
+
+    # Si el agente es una instancia de Number, agregar detalles de texto
+    if isinstance(agent, Number):
+        portrayal.update({
+            # "Text": str(agent.number),  # Si quieres usar un atributo del agente
+            "Text": str(1),
+            "Text_color": "black",
+            "Text_size": 12
+        })
+    else:
+        # Para agentes que no son de tipo Number, definir la forma
+        portrayal["Shape"] = agent.path
+
     return portrayal
 
 
