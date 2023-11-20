@@ -9,7 +9,7 @@ from controllers.modelGame import ModelGame
 from controllers.readGame import ReadData
 
 
-data = ReadData("file_3.txt").read_data()
+data = ReadData("file_1.txt").read_data()
 routes = [" ", "BFS", "DFS", "UCS",
           "Beam Search", "Hill climbing", "A*"]
 heuristics = [" ", "Manhattan", "Euclidean"]
