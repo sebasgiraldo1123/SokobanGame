@@ -2,7 +2,10 @@ import math
 from mesa import Agent
 from behaviors.breadthFirstSearch import BFS
 from behaviors.uniformCostSearch import UCS
+from behaviors.depthFirstSearch import DFS
 from behaviors.astar import Astar
+from behaviors.beamSearch import BeamSearch
+from behaviors.hillClimbing import HillClimbing
 from agents.way import Way
 from agents.flag import Flag
 from agents.number import Number
@@ -22,7 +25,6 @@ class Bot(Agent):
         self.valueStep = 1
 
     # Se ejecuta en cada paso de la simulación
-
     def step(self) -> None:
         self.perform_route()
 
@@ -34,24 +36,56 @@ class Bot(Agent):
             self.perform_dfs()
         elif self.route == "UCS":
             self.perform_ucs()
+
         elif self.route == "Beam Search":
-            self.perform_beam_search()
+            if self.heuristic == "":  # Si no tiene heurística seleccionada detiene la simulación
+                self.model.running = False
+            else:
+                self.perform_beam_search()
+
         elif self.route == "Hill climbing":
-            self.perform_hill_climbing()
+            if self.heuristic == "":
+                self.model.running = False
+            else:
+                self.perform_hill_climbing()
+
         elif self.route == "A*":
-            self.perform_a_star()
+            if self.heuristic == "":
+                self.model.running = False
+            else:
+                self.perform_a_star()
+        else:
+            self.model.running = False
 
     def perform_bfs(self):
         steps = BFS(self).search()
         self.perform_step(steps)
+        print("BFS, ", steps)
+
+    def perform_dfs(self):
+        steps = DFS(self).search()
+        self.perform_step(steps)
+        print("DFS, ", steps)
 
     def perform_ucs(self):
         steps = UCS(self).search()
         self.perform_step(steps)
+        print("UCS, ", steps)
+
+    def perform_beam_search(self):
+        steps, path = BeamSearch(self, 2).search()
+        self.perform_step(path)
+        print("Beam Search", path)
+
+    def perform_hill_climbing(self):
+        steps = HillClimbing(self).search()
+        self.perform_step(steps)
+        print("Hill Climbing*, ", steps)
 
     def perform_a_star(self):
         steps, path = Astar(self).search()
         self.perform_step(path)
+        print("A*, ", path)
 
     def verifyWay(self, cellmates) -> bool:
         for agent in cellmates:
@@ -71,6 +105,10 @@ class Bot(Agent):
         if numStep < len(steps):
             self.create_number_agent(numStep, steps[numStep])
 
+        # Detiene el recorrido una vez se terminen los steps
+        if numStep == len(steps):
+            self.model.running = False
+
     # Crea un agente número en la posición dada con step del recorrido
     def create_number_agent(self, depth, pos) -> None:
         number_agent = Number(
@@ -84,7 +122,7 @@ class Bot(Agent):
         if self.heuristic == "Manhattan":
             return abs(x - flag_x) + abs(y - flag_y)
         elif self.heuristic == "Euclidean":
-            return math.sqrt((x - flag_x)**2 + (y - flag_y)**2)
+            return math.sqrt((x - flag_x) ** 2 + (y - flag_y) ** 2)
 
     # Retorna la posición de la bandera
     def get_flag_position(self):

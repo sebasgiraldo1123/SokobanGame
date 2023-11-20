@@ -1,6 +1,3 @@
-from agents.number import Number
-
-
 class BFS:
     def __init__(self, robot):
         self.robot = robot

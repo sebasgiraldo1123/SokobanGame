@@ -49,12 +49,12 @@ class ModelGame(Model):
                             self.grid.place_agent(newWay, (j, i))
                             self.schedule.add(newWay)
                         elif item[k] == "a":
-                            newRobot = Bot(self.current_id+100,
+                            newRobot = Bot(self.current_id+1000,
                                            self, self.route, self.heuristic)
                             self.grid.place_agent(newRobot, (j, i))
                             self.schedule.add(newRobot)
                         elif item[k] == "b":
-                            newBox = Box(self.current_id+200, self)
+                            newBox = Box(self.current_id+2000, self)
                             self.grid.place_agent(newBox, (j, i))
                             self.schedule.add(newBox)
 
