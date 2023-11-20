@@ -73,9 +73,9 @@ class Bot(Agent):
         print("UCS, ", steps)
 
     def perform_beam_search(self):
-        steps, path = BeamSearch(self, 2).search()
-        self.perform_step(path)
-        print("Beam Search", path)
+        steps, path = BeamSearch(self).search()
+        self.perform_step(steps)
+        print("Beam Search", steps, path)
 
     def perform_hill_climbing(self):
         steps = HillClimbing(self).search()
