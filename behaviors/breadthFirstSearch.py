@@ -6,11 +6,11 @@ class BFS:
         grid = self.robot.model.grid
         start_x, start_y = self.robot.pos
         visited = set()
-        queue = [(start_x, start_y)]
+        queue = [(start_x, start_y, 0)]
         steps = []  # Lista de pasos para la visualización de la ruta del bot
 
         while queue:
-            move_x, move_y = queue.pop(0)
+            move_x, move_y, depth = queue.pop(0)
             if (move_x, move_y) not in visited:
                 visited.add((move_x, move_y))
                 cellmates = grid.get_cell_list_contents([(move_x, move_y)])
@@ -22,7 +22,9 @@ class BFS:
 
                 for dx, dy in self.robot.directions:
                     new_x, new_y = move_x + dx, move_y + dy
-                    cellmates = grid.get_cell_list_contents([(new_x, new_y)])
-                    if self.robot.verifyWay(cellmates) or self.robot.verifyflag(cellmates):
-                        queue.append((new_x, new_y))
-        return steps
+                    if ((new_x >= 0 and new_x < self.robot.model._get_width()) and (new_y >= 0 and new_y < self.robot.model._get_height())):
+                        cellmates = grid.get_cell_list_contents(
+                            [(new_x, new_y)])
+                        if self.robot.verifyWay(cellmates) or self.robot.verifyflag(cellmates):
+                            queue.append((new_x, new_y, depth+1))
+        return steps, depth

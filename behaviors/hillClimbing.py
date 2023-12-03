@@ -1,42 +1,42 @@
+import heapq
+
+
 class HillClimbing:
     def __init__(self, robot):
         self.robot = robot
 
     def search(self) -> list:
-        # Obtener la posición inicial del robot
-        current_x, current_y = self.robot.pos
-        current_cost = self.robot.get_heuristic(current_x, current_y)
-        steps = [(current_x, current_y)]
+        grid = self.robot.model.grid
+        start_x, start_y = self.robot.pos
+        visited = set()
+        self.count = 0
+        queue = [(self.robot.get_heuristic(
+            start_x, start_y), 0, self.count, start_x, start_y)]
+        steps = []
+        path = []
 
-        while True:
-            neighbors = self.get_neighbors(current_x, current_y)
-            next_node = None
-            next_cost = current_cost
+        while queue:
+            _, depth, _, move_x, move_y = heapq.heappop(queue)
+            if (move_x, move_y) in visited:
+                continue
 
-            # Explorar los vecinos para encontrar una mejor solución
-            for (nx, ny) in neighbors:
-                cost = self.robot.get_heuristic(nx, ny)
-                if cost < next_cost:
-                    next_node = (nx, ny)
-                    next_cost = cost
+            visited.add((move_x, move_y))
+            steps.append((move_x, move_y))
 
-            # Si no se encuentra un mejor vecino, termina la búsqueda
-            if next_node is None:
+            cellmates = grid.get_cell_list_contents([(move_x, move_y)])
+            if self.robot.verifyflag(cellmates):
                 break
 
-            # Moverse al mejor vecino encontrado
-            current_x, current_y = next_node
-            current_cost = next_cost
-            steps.append(next_node)
+            for dx, dy in self.robot.directions:
+                new_x, new_y = move_x + dx, move_y + dy
+                if ((new_x >= 0 and new_x < self.robot.model._get_width()) and (new_y >= 0 and new_y < self.robot.model._get_height())):
+                    cellmates = grid.get_cell_list_contents(
+                        [(new_x, new_y)])
+                    if (self.robot.verifyWay(cellmates) or self.robot.verifyflag(cellmates)) and (new_x, new_y) not in visited:
+                        heuristic = self.robot.get_heuristic(new_x, new_y)
+                        self.count += 1
+                        heapq.heappush(
+                            queue, (heuristic, depth+1, self.count, new_x, new_y))
+                        path.append((new_x, new_y))
 
-        return steps
-
-    def get_neighbors(self, x, y):
-        # Generar y devolver los vecinos de la posición actual
-        grid = self.robot.model.grid
-        neighbors = []
-        for dx, dy in self.robot.directions:
-            cellmates = grid.get_cell_list_contents([(x + dx, y + dy)])
-            if self.robot.verifyWay(cellmates) or self.robot.verifyflag(cellmates):
-                neighbors.append((x + dx, y + dy))
-        return neighbors
+        return steps, path
