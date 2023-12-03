@@ -11,17 +11,18 @@ class UCS:
         visited = set()
         self.counter = 0  # Contador que me da prioriodad a la cola
         # (cost, x, y, path) path = lista de pasos para llegar a la bandera
-        queue = [(0, self.counter, start_x, start_y, [])]
+        queue = [(0, self.counter, start_x, start_y)]
+        steps = []
 
         while queue:
             # heapq.heappop(queue) devuelve el elemento con menor costo
-            cost, _, move_x, move_y, path = heapq.heappop(queue)
+            cost, _, move_x, move_y = heapq.heappop(queue)
 
             if (move_x, move_y) in visited:
                 continue
 
             visited.add((move_x, move_y))
-            path = path + [(move_x, move_y)]
+            steps.append((move_x, move_y))
 
             cellmates = grid.get_cell_list_contents([(move_x, move_y)])
             if self.robot.verifyflag(cellmates):
@@ -29,10 +30,12 @@ class UCS:
 
             for dx, dy in self.robot.directions:
                 new_x, new_y = move_x + dx, move_y + dy
-                cellmates = grid.get_cell_list_contents([(new_x, new_y)])
-                if (self.robot.verifyWay(cellmates) or self.robot.verifyflag(cellmates)) and (new_x, new_y) not in visited:
-                    # heapq.heappush agrega un elemento al heap y lo ordena de acuerdo a su costo
-                    self.counter += 1
-                    heapq.heappush(
-                        queue, (cost + self.robot.valueStep, self.counter, new_x, new_y, path))
-        return path
+                if ((new_x >= 0 and new_x < self.robot.model._get_width()) and (new_y >= 0 and new_y < self.robot.model._get_height())):
+                    cellmates = grid.get_cell_list_contents(
+                        [(new_x, new_y)])
+                    if (self.robot.verifyWay(cellmates) or self.robot.verifyflag(cellmates)) and (new_x, new_y) not in visited:
+                        # heapq.heappush agrega un elemento al heap y lo ordena de acuerdo a su costo
+                        self.counter += 1
+                        heapq.heappush(
+                            queue, (cost + self.robot.valueStep, self.counter, new_x, new_y))
+        return steps

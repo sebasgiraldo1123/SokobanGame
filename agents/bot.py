@@ -60,32 +60,26 @@ class Bot(Agent):
     def perform_bfs(self):
         steps = BFS(self).search()
         self.perform_step(steps)
-        print("BFS, ", steps)
 
     def perform_dfs(self):
         steps = DFS(self).search()
         self.perform_step(steps)
-        print("DFS, ", steps)
 
     def perform_ucs(self):
         steps = UCS(self).search()
         self.perform_step(steps)
-        print("UCS, ", steps)
 
     def perform_beam_search(self):
-        steps, path = BeamSearch(self).search()
+        steps = BeamSearch(self).search()
         self.perform_step(steps)
-        print("Beam Search", steps, path)
 
     def perform_hill_climbing(self):
-        steps = HillClimbing(self).search()
+        steps, path = HillClimbing(self).search()
         self.perform_step(steps)
-        print("Hill Climbing*, ", steps)
 
     def perform_a_star(self):
         steps, path = Astar(self).search()
         self.perform_step(path)
-        print("A*, ", path)
 
     def verifyWay(self, cellmates) -> bool:
         for agent in cellmates:

@@ -18,25 +18,22 @@ class DFS:
         while stack:
             # Tomar la última posición añadida a la pila
             move_x, move_y = stack.pop()
-            if (move_x, move_y) not in visited:
-                # Marcar la posición actual como visitada
-                visited.add((move_x, move_y))
-                # Obtener los objetos en la celda actual
-                cellmates = grid.get_cell_list_contents([(move_x, move_y)])
-                # Añadir la posición actual a los pasos
-                steps.append((move_x, move_y))
-                # Verificar si la celda actual contiene la meta
-                if self.robot.verifyflag(cellmates):
-                    break
+            if (move_x, move_y) in visited:
+                continue
+            visited.add((move_x, move_y))
+            cellmates = grid.get_cell_list_contents([(move_x, move_y)])
 
-                # Iterar sobre las direcciones posibles
-                for dx, dy in self.robot.directions:
-                    new_x, new_y = move_x + dx, move_y + dy
-                    # Obtener los objetos en la nueva celda
-                    cellmates = grid.get_cell_list_contents([(new_x, new_y)])
-                    # Verificar si la nueva celda es transitable y no ha sido visitada
+            steps.append((move_x, move_y))
+            if self.robot.verifyflag(cellmates):
+                break
+
+            self.robot.directions = [(0, -1), (1, 0), (0, 1), (-1, 0)]
+            for dx, dy in self.robot.directions:
+                new_x, new_y = move_x + dx, move_y + dy
+                if ((new_x >= 0 and new_x < self.robot.model._get_width()) and (new_y >= 0 and new_y < self.robot.model._get_height())):
+                    cellmates = grid.get_cell_list_contents(
+                        [(new_x, new_y)])
                     if self.robot.verifyWay(cellmates) or self.robot.verifyflag(cellmates):
-                        # Añadir la nueva posición a la pila para visitar después
                         stack.append((new_x, new_y))
 
         return steps

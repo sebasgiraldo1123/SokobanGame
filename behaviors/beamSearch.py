@@ -1,48 +1,47 @@
 import heapq
 
+
 class BeamSearch:
-    def __init__(self, robot):
-        # Inicializa la clase con una referencia al robot.
+    def __init__(self, robot, beam_width=2):
         self.robot = robot
+        self.beam_width = beam_width
 
     def search(self) -> list:
-        # Obtener la grilla del modelo y la posición inicial del robot.
         grid = self.robot.model.grid
         start_x, start_y = self.robot.pos
-
-        # Conjunto para llevar un registro de las celdas visitadas.
         visited = set()
-        # Cola de prioridad para los nodos, usando la heurística como clave de ordenamiento.
-        queue = [(0, start_x, start_y, [])]  # Formato: (heurística, x, y, path)
-        steps = []  # Para almacenar los pasos realizados durante la búsqueda.
+        self.counter = 0  # Contador que me da prioriodad a la cola
+        queue = [(0, self.counter, 0, start_x, start_y)]
+        steps = []
 
         while queue:
-            # Extraer el nodo con la mejor heurística.
-            _, move_x, move_y, path = heapq.heappop(queue)
+            # heapq.nsmallest devuelve los n elementos más pequeños de la lista
+            queue = heapq.nsmallest(self.beam_width, queue)
+            new_queue = []
+            for _, _, cost, move_x, move_y in queue:
+                if (move_x, move_y) in visited:
+                    continue
 
-            # Si el nodo ya ha sido visitado, continúa con el siguiente.
-            if (move_x, move_y) in visited:
-                continue
+                visited.add((move_x, move_y))
+                steps.append((move_x, move_y))
 
-            # Marcar el nodo como visitado y añadirlo al camino actual.
-            visited.add((move_x, move_y))
-            path = path + [(move_x, move_y)]
-            steps.append((move_x, move_y))
+                cellmates = grid.get_cell_list_contents([(move_x, move_y)])
+                if self.robot.verifyflag(cellmates):
+                    break
 
-            # Comprobar si se ha alcanzado la meta.
-            cellmates = grid.get_cell_list_contents([(move_x, move_y)])
-            if self.robot.verifyflag(cellmates):
-                return steps, path  # Retorna los pasos si se alcanza la meta.
+                for dx, dy in self.robot.directions:
+                    new_x, new_y = move_x + dx, move_y + dy
+                    if ((new_x >= 0 and new_x < self.robot.model._get_width()) and (new_y >= 0 and new_y < self.robot.model._get_height())):
+                        cellmates = grid.get_cell_list_contents(
+                            [(new_x, new_y)])
+                        if (self.robot.verifyWay(cellmates) or self.robot.verifyflag(cellmates)) and (new_x, new_y) not in visited:
+                            new_cost = cost + self.robot.valueStep
+                            heuristic = self.robot.get_heuristic(
+                                new_x, new_y)
+                            fun_cost = new_cost + heuristic
+                            self.counter += 1
+                            new_queue.append(
+                                (fun_cost, self.counter, new_cost, new_x, new_y))
+            queue = new_queue
 
-            # Explorar los vecinos del nodo actual.
-            for dx, dy in self.robot.directions:
-                new_x, new_y = move_x + dx, move_y + dy
-                cellmates = grid.get_cell_list_contents([(new_x, new_y)])
-                # Comprobar si el vecino es un camino válido y no ha sido visitado.
-                if self.robot.verifyWay(cellmates) or self.robot.verifyflag(cellmates):
-                    # Calcular la heurística para el vecino.
-                    heuristic = self.robot.get_heuristic(new_x, new_y)
-                    # Añadir el vecino a la cola de prioridad.
-                    heapq.heappush(queue, (heuristic, new_x, new_y, path))
-
-        return steps, path
+        return steps
