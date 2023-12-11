@@ -7,6 +7,5 @@
     <orderEntry type="jdk" jdkName="Python 3.12 (sokoban-game)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="abm-mesa-python" />
-    <orderEntry type="module" module-name="recursos-practica-vision-y-voz-artificial" />
   </component>
 </module>

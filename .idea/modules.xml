@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../abm-mesa-python/.idea/abm-mesa-python.iml" filepath="$PROJECT_DIR$/../abm-mesa-python/.idea/abm-mesa-python.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../recursos-practica-vision-y-voz-artificial/.idea/recursos-practica-vision-y-voz-artificial.iml" filepath="$PROJECT_DIR$/../recursos-practica-vision-y-voz-artificial/.idea/recursos-practica-vision-y-voz-artificial.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/sokoban-game.iml" filepath="$PROJECT_DIR$/.idea/sokoban-game.iml" />
     </modules>
   </component>
