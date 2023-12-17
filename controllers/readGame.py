@@ -4,12 +4,15 @@ class ReadData:
 
     def read_data(self):
         try:
-            with open("assets/data/"+self.file_name, 'r') as file:
-                dataTemp = [line.strip().split(', ') for line in file]
-                data = [[element.rstrip(',') for element in row]
-                        for row in dataTemp]
-                invertedData = list(reversed(data))
-            return invertedData
+            with open("assets/data/" + self.file_name, 'r') as file:
+                contenido = file.read()
+            lineas = contenido.split('\n')
+            filas = []
+            for linea in lineas:
+                print(linea)
+                elementos = [item.strip() for item in linea.split(',')]
+                filas.append(elementos[:-1])
+            return list(reversed(filas))
         except FileNotFoundError:
             raise FileNotFoundError("File not found")
         except Exception as e:

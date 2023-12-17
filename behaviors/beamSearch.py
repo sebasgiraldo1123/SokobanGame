@@ -1,48 +1,30 @@
-import heapq
-
 class BeamSearch:
-    def __init__(self, robot):
-        # Inicializa la clase con una referencia al robot.
-        self.robot = robot
+    def __init__(self, root, beam_width):
+        self.root = root
+        self.beam_width = beam_width
 
     def search(self) -> list:
-        # Obtener la grilla del modelo y la posición inicial del robot.
-        grid = self.robot.model.grid
-        start_x, start_y = self.robot.pos
+        if not self.root:
+            return []
 
-        # Conjunto para llevar un registro de las celdas visitadas.
-        visited = set()
-        # Cola de prioridad para los nodos, usando la heurística como clave de ordenamiento.
-        queue = [(0, start_x, start_y, [])]  # Formato: (heurística, x, y, path)
-        steps = []  # Para almacenar los pasos realizados durante la búsqueda.
+        result = []
+        current_level = [self.root]
 
-        while queue:
-            # Extraer el nodo con la mejor heurística.
-            _, move_x, move_y, path = heapq.heappop(queue)
+        while current_level:
+            next_level = []
 
-            # Si el nodo ya ha sido visitado, continúa con el siguiente.
-            if (move_x, move_y) in visited:
-                continue
+            # Ordenamos los nodos del nivel actual por su heurística de menor a mayor
+            current_level.sort(key=lambda node: node.heuristic)
 
-            # Marcar el nodo como visitado y añadirlo al camino actual.
-            visited.add((move_x, move_y))
-            path = path + [(move_x, move_y)]
-            steps.append((move_x, move_y))
+            # Tomamos los mejores nodos según el ancho del haz
+            candidates = current_level[:self.beam_width]
 
-            # Comprobar si se ha alcanzado la meta.
-            cellmates = grid.get_cell_list_contents([(move_x, move_y)])
-            if self.robot.verifyflag(cellmates):
-                return steps, path  # Retorna los pasos si se alcanza la meta.
+            for node in candidates:
+                result.append(node.pos)  # Agregamos el valor del nodo a la lista de resultados
 
-            # Explorar los vecinos del nodo actual.
-            for dx, dy in self.robot.directions:
-                new_x, new_y = move_x + dx, move_y + dy
-                cellmates = grid.get_cell_list_contents([(new_x, new_y)])
-                # Comprobar si el vecino es un camino válido y no ha sido visitado.
-                if self.robot.verifyWay(cellmates) or self.robot.verifyflag(cellmates):
-                    # Calcular la heurística para el vecino.
-                    heuristic = self.robot.get_heuristic(new_x, new_y)
-                    # Añadir el vecino a la cola de prioridad.
-                    heapq.heappush(queue, (heuristic, new_x, new_y, path))
+                # Agregamos los hijos del nodo al próximo nivel
+                next_level.extend(node.children)
 
-        return steps, path
+            current_level = next_level
+
+        return result  # Devolvemos la lista con los valores de los nodos visitados

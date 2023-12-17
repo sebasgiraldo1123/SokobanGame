@@ -1,42 +1,27 @@
+from collections import deque
+
+
 class HillClimbing:
-    def __init__(self, robot):
-        # Inicializar con una instancia del robot.
-        self.robot = robot
+    def __init__(self, root):
+        self.root = root
 
     def search(self) -> list:
-        # Obtener la grilla del modelo y la posición inicial del robot.
-        grid = self.robot.model.grid
-        current_x, current_y = self.robot.pos
+        if not self.root:
+            return []
 
-        # Lista para almacenar los pasos realizados durante la búsqueda.
-        steps = [(current_x, current_y)]
-        # Conjunto para registrar las celdas visitadas.
-        visited = set([(current_x, current_y)])
+        result = []
+        queue = deque()
+        queue.append(self.root)
 
-        while True:
-            best_heuristic = float('inf')
-            next_step = None
+        while queue:
+            current_node = queue.popleft()
+            result.append(current_node.pos)  # Agregamos el valor del nodo a la lista de resultados
 
-            # Explorar los vecinos del nodo actual.
-            for dx, dy in self.robot.directions:
-                new_x, new_y = current_x + dx, current_y + dy
-                # Verificar si la nueva celda es transitable y no ha sido visitada.
-                cellmates = grid.get_cell_list_contents([(new_x, new_y)])
-                if (new_x, new_y) not in visited and self.robot.verifyWay(cellmates):
-                    # Calcular la heurística para el vecino.
-                    heuristic = self.robot.get_heuristic(new_x, new_y)
-                    # Seleccionar el vecino con la mejor heurística.
-                    if heuristic < best_heuristic:
-                        best_heuristic = heuristic
-                        next_step = (new_x, new_y)
+            # Expandir y ordenar los hijos por su heurística
+            current_node.children.sort(key=lambda node: node.heuristic)
+            best_child = current_node.children[0] if current_node.children else None
 
-            # Si no se encuentra un mejor vecino, terminar la búsqueda.
-            if next_step is None:
-                break
+            if best_child and best_child.heuristic < current_node.heuristic:
+                queue.append(best_child)  # Agregar al mejor hijo si mejora la heurística
 
-            # Moverse al mejor vecino encontrado y actualizar la posición actual.
-            current_x, current_y = next_step
-            steps.append(next_step)
-            visited.add(next_step)  # Añadir el nuevo nodo a los visitados.
-
-        return steps
+        return result  # Dev

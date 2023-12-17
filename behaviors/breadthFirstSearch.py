@@ -1,28 +1,24 @@
+from collections import deque
+
 class BFS:
-    def __init__(self, robot):
-        self.robot = robot
+    def __init__(self, root):
+        self.root = root
 
     def search(self) -> list:
-        grid = self.robot.model.grid
-        start_x, start_y = self.robot.pos
-        visited = set()
-        queue = [(start_x, start_y)]
-        steps = []  # Lista de pasos para la visualización de la ruta del bot
+        if not self.root:
+            return []
+
+        result = []
+        queue = deque([self.root])  # Inicializamos una cola con el nodo raíz
 
         while queue:
-            move_x, move_y = queue.pop(0)
-            if (move_x, move_y) not in visited:
-                visited.add((move_x, move_y))
-                cellmates = grid.get_cell_list_contents([(move_x, move_y)])
+            node = queue.popleft()  # Tomamos el primer nodo de la cola
+            result.append(node.pos)  # Agregamos el valor del nodo a la lista de resultados
+            if node.heuristic == 0:
+                break
 
-                steps.append((move_x, move_y))
+            # Agregamos los hijos del nodo a la cola para explorar en el siguiente nivel
+            for child in node.children:
+                queue.append(child)
 
-                if self.robot.verifyflag(cellmates):
-                    break
-
-                for dx, dy in self.robot.directions:
-                    new_x, new_y = move_x + dx, move_y + dy
-                    cellmates = grid.get_cell_list_contents([(new_x, new_y)])
-                    if self.robot.verifyWay(cellmates) or self.robot.verifyflag(cellmates):
-                        queue.append((new_x, new_y))
-        return steps
+        return result  # Devolvemos la lista con los valores de los nodos visitados

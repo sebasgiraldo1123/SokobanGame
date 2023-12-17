@@ -8,25 +8,15 @@ from controllers import canvasTools
 from controllers.modelGame import ModelGame
 from controllers.readGame import ReadData
 
-
-data = ReadData("file_5.txt").read_data()
-routes = [" ", "BFS", "DFS", "UCS",
-          "Beam Search", "Hill climbing", "A*"]
-heuristics = [" ", "Manhattan", "Euclidean"]
+data = ReadData("world_1.txt").read_data()
+algorithm = ["", "BFS", "Beam Search", "Hill climbing"]
 
 simulation_params = {
     "data": data,
-    "route": Choice(name="Selected Route",
-                    value="",
-                    choices=routes),
-    "heuristic": Choice(name="Selected Heuristic",
+    "algorithm": Choice(name="Selected algorithm",
                         value="",
-                        choices=heuristics),
-    "text_1": StaticText("Prioridad al expandir:"),
-    "text_2": StaticText("Left (-1, 0), Up (0, 1), Right (1, 0), Down (0, -1).")
+                        choices=algorithm)
 }
-
-
 # Cada agente que se dibuja en el mundo grilla pasa por aquí y toma las características aquí definidas.
 
 def agent_portrayal(agent):
@@ -47,7 +37,6 @@ canvas_height, canvas_width = canvasTools.calculate_canvas_dimensions(
     columns, rows, 600)
 
 grid = CanvasGrid(agent_portrayal, columns, rows, canvas_width, canvas_height)
-server = ModularServer(ModelGame, [grid], "Sokoban Game",
-                       model_params=simulation_params)
+server = ModularServer(ModelGame, [grid], "Sokoban Game", model_params=simulation_params)
 server.port = 8521
 server.launch()
